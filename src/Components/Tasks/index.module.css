@@ -28,7 +28,18 @@
     color: black;
 }
 
-.header .search input:focus{
+.input-text{
+    border: none;
+    background: none;
+    border-bottom: 2px solid lightcoral;
+    border-radius: 0px;
+    opacity: 01;
+    width: 100%;
+    padding: 0% 1%;
+    color: black;
+}
+
+.header .search input:focus, .input-text input:focus{
     outline: none; 
 }
 

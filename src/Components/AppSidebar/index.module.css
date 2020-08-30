@@ -11,7 +11,7 @@
 .main-container .menu{
     color: white;
     height: 98%;
-    padding: 2% 2% 2% 5%;
+    padding: 3% 2% 2% 5%;
     background-color: rgba(0, 0, 0, 0.8) !important;    
 }
 
@@ -24,10 +24,17 @@
     margin-top: 2%;
     text-align: left;
     border-radius: 5px;
+    height: 35vh;
     font-family: 'Roboto', sans-serif;
 }
-
-.menu-item .navlink{
+.menu .user-buckets{
+    margin-top: 2%;
+    text-align: left;
+    height: 35vh;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+.menu-item .navlink, .user-buckets .navlink{
     margin: 2% 1%;
     padding: 2% 0%;
     display: inline-flex;

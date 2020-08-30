@@ -4,10 +4,10 @@ import Tasks from '../Tasks'
 import axios from './../../Axios/Axios'
 import Urls from '../../Utilities/Urls'
 
-const Home = () => {
+const Completed = () => {
     const [myTasks, setmyTasks] = useState([])
     useEffect(() => {
-        axios.get(`${Urls.tasks}/my-tasks`)
+        axios.get(`${Urls.tasks}?type=important`)
             .then(res => {
                 console.log(res.data)
                 setmyTasks(res.data.myTasks)
@@ -19,9 +19,9 @@ const Home = () => {
     }, [])
     return (
         <div className={classes['main-container']}>
-            <Tasks tasks={myTasks} type={'myTasks'} />
+            <Tasks tasks={myTasks} type={'Important'} />
         </div>
     )
 }
 
-export default Home
+export default Completed

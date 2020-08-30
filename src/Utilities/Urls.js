@@ -1,10 +1,9 @@
 const Urls = {
-    'tasks': {
-        'get': 'http://localhost:3000/task/my-tasks',
-        'post': 'http://localhost:3000/task'
-    },
+    'tasks': 'http://localhost:3000/task',
     'bucket': {
-        'get': 'http://localhost:3000/bucket/all'
+        'get': 'http://localhost:3000/bucket/all',
+        'getTasks': 'http://localhost:3000/bucket',
+        'url': 'http://localhost:3000/bucket'
     }
 }
 

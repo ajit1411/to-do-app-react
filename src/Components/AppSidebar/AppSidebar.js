@@ -1,17 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import classes from './index.module.css'
 import { withRouter } from 'react-router-dom'
-
+import axios from './../../Axios/Axios'
+import Urls from './../../Utilities/Urls'
 const AppSidebar = (props) => {
-    const Nav = ({ text, path, icon }) => {
-        const isSelected = function(){
-            if(window.location.href.includes(path)){
+    const [buckets, setbuckets] = useState([])
+    useEffect(() => {
+        axios.get(`${Urls.tasks}/my-tasks`)
+            .then(res => {
+                console.log(res.data.myBuckets)
+                setbuckets(res.data.myBuckets)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+    const Nav = ({ text, path, icon, bucketId }) => {
+        const isSelected = function () {
+            if (window.location.href.includes(path)) {
                 return true
             }
             return false
         }
+        const goToScreen = (path, bucketId) => {
+            props.history.push(
+                {
+                    'pathname': `${path}`,
+                    'state': {
+                        'bucketName': text,
+                        'bucketId': bucketId
+                    }
+
+                }
+            )
+        }
         return (
-            <div onClick={() => props.history.push({ pathname: path })} className={isSelected() ? classes['navlink-selected'] : classes['navlink']}>
+            <div onClick={() => goToScreen(path, bucketId)} className={isSelected() ? classes['navlink-selected'] : classes['navlink']}>
                 <b className={classes['icon']}>
                     <i className={icon}></i>
                 </b>
@@ -21,13 +45,41 @@ const AppSidebar = (props) => {
             </div>
         )
     }
+    // Bucket
+    const NewBucket = () => {
+        const [bucketName, setBucketName] = useState('')
+        const createBucket = () => {
+            const body = {
+                'bucketDetails': {
+                    'name': bucketName
+                }
+            }
+            axios.post(`${Urls.bucket.url}/new`, body)
+                .then(res => {
+                    console.log(res.data)
+                    setBucketName('')
+                    setbuckets([...buckets, res.data.bucketData])
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+        return (
+            <div className={classes['new-bucket']}>
+                <div className={'input__text white-text'}>
+                    <input value={bucketName} placeholder={'New bucket?'} onChange={(e) => setBucketName(e.target.value)} />
+                    <i className={'fa fa-plus'} onClick={createBucket}></i>
+                </div>
+            </div>
+        )
+    }
     return (
         <div className={classes['main-container']}>
             <div className={classes['menu']}>
                 <div className={classes['menu-header']}>
-                    <h3>
+                    <h5>
                         Your tasks
-                    </h3>
+                    </h5>
                     <div className={'horizontal-line'}></div>
                 </div>
                 <div className={classes['menu-item']}>
@@ -35,6 +87,22 @@ const AppSidebar = (props) => {
                     <Nav text={'Important'} path={'/important'} icon={'fa fa-star'} />
                     <Nav text={'Completed'} path={'/completed'} icon={'fa fa-check-square-o'} />
                 </div>
+                <div className={classes['menu-header']}>
+                    <h5>
+                        Categories
+                    </h5>
+                    <div className={'horizontal-line'}></div>
+                </div>
+                <div className={classes['user-buckets']}>
+                    {
+                        buckets && buckets.length > 0 ? (
+                            buckets.map(bucket => (
+                                <Nav text={bucket['name']} path={`/bucket/${bucket['bucketId'].toLowerCase().replace(/ /g, '-')}`} icon={'fa fa-check'} bucketId={bucket['bucketId']} />
+                            ))
+                        ) : ''
+                    }
+                </div>
+                <NewBucket />
             </div>
         </div>
     )
