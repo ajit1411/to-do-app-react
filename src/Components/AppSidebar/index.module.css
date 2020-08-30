@@ -1,0 +1,60 @@
+.main-container{
+    border: 1px solid lightgray;
+    display: block;
+    height: 90vh;
+    overflow-y: hidden;
+    background-image: url('https://i.pinimg.com/originals/16/89/2a/16892aa7de8a3086829a03df77a122a9.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.main-container .menu{
+    color: white;
+    height: 98%;
+    padding: 2% 2% 2% 5%;
+    background-color: rgba(0, 0, 0, 0.8) !important;    
+}
+
+.menu .menu-header{
+    font-family: 'Roboto';
+}
+
+
+.menu .menu-item{
+    margin-top: 2%;
+    text-align: left;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.menu-item .navlink{
+    margin: 2% 1%;
+    padding: 2% 0%;
+    display: inline-flex;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.navlink-selected{
+    color: indianred;
+    margin: 2% 1%;
+    padding: 2% 0%;
+    display: inline-flex;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.menu-item .navlink:hover{
+    color: indianred;
+}
+
+
+.navlink .icon, .navlink-selected .icon{
+    width: 10%;
+}
+
+.navlink .text, .navlink-selected .text{
+    width: 90%;
+}

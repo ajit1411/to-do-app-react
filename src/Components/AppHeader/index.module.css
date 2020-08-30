@@ -1,0 +1,29 @@
+.main-container{
+    /* margin: 1%; */
+    border: 1px solid lightgray;
+    width: 100vw;
+}
+
+.header{
+    display: inline-flex;
+    width: 100vw;
+    height: 8vh;
+    background-color: lightcoral;
+    color: white;
+}
+
+.header .logo{
+    font-family: 'Roboto', sans-serif;
+    width: 60%;
+    vertical-align: middle;
+    padding: 0% 2%;
+    text-align: left;
+    /* border: 1px solid red; */
+}
+
+.header .extras{
+    width: 40%;
+    font-family: Roboto, sans-serif;
+    padding: 0% 2%;
+    /* border: 1px solid green; */
+}

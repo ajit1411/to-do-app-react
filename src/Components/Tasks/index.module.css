@@ -1,0 +1,104 @@
+.header{
+    text-align: left;
+    color: darkgray;
+    display: flex;
+    flex: 1;
+    vertical-align: middle;
+    /* border: 1px solid red; */
+}
+.header .title{
+    flex: 0.30;
+    vertical-align: middle;
+    color: lightcoral;
+}
+
+.header .search{
+    flex: 0.60;
+    align-items: center;
+}
+
+.header .search input{
+    border: none;
+    background: none;
+    border-bottom: 2px solid lightcoral;
+    border-radius: 0px;
+    opacity: 01;
+    width: 100%;
+    padding: 0% 1%;
+    color: black;
+}
+
+.header .search input:focus{
+    outline: none; 
+}
+
+.header .add{
+    flex: 0.10;
+    /* border: 1px solid red; */
+    text-align: center;
+    color: lightcoral;
+}
+
+.header .add h4 i{
+    cursor: pointer;
+}
+
+.task-list{
+    margin: 2% 0%;
+    height: 74vh;
+    overflow-y: overlay;
+}
+
+.task-header{
+    background-color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.5s;
+    margin: 0.5% 0% 0% 0%;
+}
+
+.task-content{
+    background-color: white;
+    border-radius: 5px;
+    text-align: justify;
+}
+
+.task-header:hover{
+    box-shadow: 0px 2px 5px;
+}
+
+.checkbox, .checkbox i{
+    text-align: left;
+    transition: 0.3s;
+}
+
+.checkbox i, .actions i{
+    font-size: 1.5rem;
+}
+
+.checkbox i:hover{
+    color: lightcoral;
+}
+
+.checkbox-selected{
+    text-align: left;
+}
+
+.checkbox-selected i{
+    font-size: 1.5rem;
+    color: lightcoral;
+    text-align: left;
+}
+
+.task-name{
+    text-align: left;
+}
+
+.actions, .actions i{
+    transition: 0.3s;
+    text-align: right;
+}
+
+.actions i:hover{
+    color: lightcoral;
+}

@@ -1,0 +1,8 @@
+.Applayout__app{
+    display: inline-flex;
+    width: 100%;
+}
+
+.Applayout__app .Applayout__sidebar{
+    width: 30% !important;
+}
