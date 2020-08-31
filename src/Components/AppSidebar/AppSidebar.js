@@ -16,12 +16,16 @@ const AppSidebar = (props) => {
             })
     }, [])
     const Nav = ({ text, path, icon, bucketId }) => {
+
+        // Check is navlink is selected or not
         const isSelected = function () {
             if (window.location.href.includes(path)) {
                 return true
             }
             return false
         }
+
+        // Navigate to the selected screen 
         const goToScreen = (path, bucketId) => {
             props.history.push(
                 {
@@ -34,14 +38,39 @@ const AppSidebar = (props) => {
                 }
             )
         }
+
+        // Delete the selected task bucket
+        const deleteBucket = (bucketId) => {
+            axios.delete(`${Urls.bucket.url}/${bucketId}`)
+                .then(res => {
+                    setbuckets(buckets.filter(bucket => {
+                        if (bucket['bucketId'] != bucketId) {
+                            return bucket
+                        }
+                    }))
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+
         return (
-            <div onClick={() => goToScreen(path, bucketId)} className={isSelected() ? classes['navlink-selected'] : classes['navlink']}>
+            <div className={isSelected() ? classes['navlink-selected'] : classes['navlink']}>
                 <b className={classes['icon']}>
                     <i className={icon}></i>
                 </b>
-                <b className={classes['text']}>
+                <b onClick={() => goToScreen(path, bucketId)} className={classes['text']}>
                     {text}
                 </b>
+                {
+                    bucketId ? (
+                        <b onClick={() => deleteBucket(bucketId)} className={`${classes['icon']} ${classes['bucket-icon']}`}>
+                            <i className={`fa fa-trash`}></i>
+                        </b>
+                    ) : (
+                            <></>
+                        )
+                }
             </div>
         )
     }

@@ -62,24 +62,30 @@
 
 .task-header{
     background-color: white;
-    border-radius: 5px;
+    border-radius: 3px;
     cursor: pointer;
     transition: 0.5s;
+    padding: 1%;
+    width: 75vw;
     margin: 0.5% 0% 0% 0%;
 }
 
 .task-content{
-    background-color: white;
+    background-color: rgb(155, 143, 143);
     border-radius: 5px;
     text-align: justify;
 }
 
 .task-header:hover{
-    box-shadow: 0px 2px 5px;
+    box-shadow: 0px 1px 3px;
 }
 
 .checkbox, .checkbox i{
     text-align: left;
+    transition: 0.3s;
+}
+
+.actions{
     transition: 0.3s;
 }
 
@@ -112,4 +118,8 @@
 
 .actions i:hover{
     color: lightcoral;
+}
+
+.striked{
+    text-decoration: line-through;
 }

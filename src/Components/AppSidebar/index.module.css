@@ -65,3 +65,12 @@
 .navlink .text, .navlink-selected .text{
     width: 90%;
 }
+
+.bucket-icon{
+    color: white !important;
+    transition: 0.3s;
+}
+
+.bucket-icon:hover i{
+    color: lightcoral;
+}

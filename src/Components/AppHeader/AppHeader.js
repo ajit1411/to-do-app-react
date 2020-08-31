@@ -9,11 +9,6 @@ const AppHeader = () => {
                         2DO
                     </h4>
                 </div>
-                <div className={classes['extras']}>
-                    <h4>
-                        Settings
-                    </h4>
-                </div>
             </div>
         </div>
     )

@@ -4,13 +4,22 @@ import classes from './index.module.css'
 import axios from '../../Axios/Axios'
 import Urls from '../../Utilities/Urls'
 import PopupModal from '../PopupModal/PopupModal'
-
+import { toast } from 'react-toastify'
+import { toastConf } from './../../Utilities/Utility'
 const Tasks = (props) => {
     const [myTasks, setMyTasks] = useState([])
     const [filteredList, setFilteredList] = useState([])
     useEffect(() => {
-        setMyTasks(props.tasks ? props.tasks : [])
-        setFilteredList(props.tasks ? props.tasks : [])
+        setMyTasks(props.tasks ? props.tasks.map(task => {
+            let currentTask = { ...task }
+            currentTask['isEditable'] = false
+            return currentTask
+        }) : [])
+        setFilteredList(props.tasks ? props.tasks.map(task => {
+            let currentTask = { ...task }
+            currentTask['isEditable'] = false
+            return currentTask
+        }) : [])
         // 
     }, [props && props.tasks])
     // check if the task has status == completed
@@ -30,7 +39,9 @@ const Tasks = (props) => {
         axios.post(`${Urls.tasks}/${taskToUpdate['taskId']}`, body)
             .then(res => {
                 let allTasks = myTasks.map(task => task)
+                let filteredTasks = filteredList.map(task => task)
                 const taskCount = allTasks.length
+                const filteredTaskCount = filteredTasks.length
                 for (let i = 0; i < taskCount; i++) {
                     if (allTasks[i]['taskId'] === selectedTask['taskId']) {
                         if (allTasks[i]['status'] === 'incomplete') {
@@ -42,10 +53,24 @@ const Tasks = (props) => {
                         break
                     }
                 }
+                for (let i = 0; i < filteredTaskCount; i++) {
+                    if (filteredTasks[i]['taskId'] === selectedTask['taskId']) {
+                        if (filteredTasks[i]['status'] === 'incomplete') {
+                            filteredTasks[i]['status'] = 'completed'
+                        }
+                        else {
+                            filteredTasks[i]['status'] = 'incomplete'
+                        }
+                        break
+                    }
+                }
+                toast('Task updated', toastConf)
                 setMyTasks(allTasks.map(task => task))
+                setFilteredList(filteredTasks.map(task => task))
             })
             .catch(error => {
                 console.log(error)
+                toast.error('Error while processing your request!', toastConf)
             })
     }
 
@@ -77,22 +102,62 @@ const Tasks = (props) => {
                         return item
                     }
                 }))
+                toast('Task deleted', toastConf)
             })
             .catch(error => {
+                toast.error('Error while processing your request!', toastConf)
                 console.log(error)
             })
+    }
+
+    // Edit the selected task
+    const toggleEdit = (selectedTask, inputType, inputValue) => {
+        var taskToUpdate;
+        let filteredTasks = [...filteredList]
+        let tasks = [...myTasks]
+        const filteredListCount = filteredTasks.length
+        const taskCount = tasks.length
+        for (let i = 0; i < filteredListCount; i++) {
+            if (filteredTasks[i]['taskId'] == selectedTask['taskId']) {
+                filteredTasks[i][inputType] = inputValue
+                taskToUpdate = filteredTasks[i]
+                break
+            }
+        }
+        for (let i = 0; i < taskCount; i++) {
+            if (tasks[i]['taskId'] == selectedTask['taskId']) {
+                tasks[i][inputType] = inputValue
+                taskToUpdate = tasks[i]
+                break
+            }
+        }
+        if (inputType === 'isEditable' && inputValue === false) {
+            axios.post(`${Urls.tasks}/${taskToUpdate['taskId']}`, { 'taskData': taskToUpdate })
+                .then(res => {
+                    toast('Task updated', toastConf)
+                })
+                .catch(error => {
+                    console.log(error)
+                    toast.error('Error while processing your request!', toastConf)
+                })
+        }
+        setMyTasks(tasks.map(task => {
+            return task
+        }))
+        setFilteredList(filteredTasks.map(task => {
+            return task
+        }))
+
     }
 
     // Add new task subcomponent
     const AddNewTask = () => {
         const [taskName, settaskName] = useState('')
-        const [taskDescription, settaskDescription] = useState('')
         const [dueDate, setdueDate] = useState('')
         const addTask = () => {
             const body = {
                 'taskDetails': {
                     'name': taskName,
-                    'description': taskDescription,
                     'parent': props.history && props.history.location ? [{ 'bucketId': props.history.location.state.bucketId }] : [],
                     'status': 'incomplete',
                     'createdOn': new Date().toISOString(),
@@ -104,9 +169,13 @@ const Tasks = (props) => {
                     console.log(res.data)
                     setFilteredList([body['taskDetails'], ...filteredList])
                     setMyTasks([body['taskDetails'], ...myTasks])
+                    document.getElementById(`popup-modal__create-task-modal`).click()
+                    toast('Task created', toastConf)
                 })
                 .catch(error => {
+                    toast.error('Error while processing your request!', toastConf)
                     console.log(error)
+                    document.getElementById(`popup-modal__create-task-modal`).click()
                 })
         }
         return (
@@ -125,14 +194,8 @@ const Tasks = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className={`row`}>
+                <div className={`row text-center`} style={{marginTop: '2%'}}>
                     <div className={`col-12`}>
-                        <div className={'input__textarea'}>
-                            <label>Description:</label>
-                            <textarea onChange={(e) => settaskDescription(e.target.value)} rows={'5'} placeholder={'Description'} maxLength={'1000'} />
-                        </div>
-                    </div>
-                    <div className={`col-4`}>
                         <button onClick={addTask} className={'btn btn-primary'}>
                             Create task
                         </button>
@@ -155,6 +218,7 @@ const Tasks = (props) => {
                 </div>
                 <div className={classes['add']}>
                     <PopupModal
+                        modalId={'create-task-modal'}
                         toggle={<h4><i className={'fa fa-plus'}></i></h4>}
                         content={<AddNewTask />}
                         header={'Add task'}
@@ -162,52 +226,53 @@ const Tasks = (props) => {
                 </div>
             </div>
             <div className={classes['task-list']}>
-                <Accordion>
-                    {
-                        filteredList && filteredList.length > 0 ? (
-                            filteredList.map((task, index) =>
-                                <div className={classes['task']} key={`task-${index + 1}`}>
-                                    <Accordion.Toggle as={Card.Header} className={classes['task-header']} eventKey={`task-${index}`}>
-                                        <div className={`row`}>
-                                            <div className={`col-1`}>
-                                                <div className={isCompleted(task) ? classes['checkbox-selected'] : classes['checkbox']}>
-                                                    <i onClick={() => updateTaskStatus(task)} className={'fa fa-check-circle-o'}></i>
-                                                </div>
-                                            </div>
-                                            <div className={`col-9 text-left`}>
-                                                <span className={classes['task-name']}>
-                                                    {
-                                                        task.name
-                                                    }
-                                                </span>
-                                            </div>
-                                            <div className={`col-2`}>
-                                                <div className={classes['actions']}>
-                                                    <i className={'fa fa-trash'} onClick={() => deleteTask(task)}></i>
-                                                </div>
-                                            </div>
+                {
+                    filteredList && filteredList.length > 0 ? (
+                        filteredList.map((task, index) =>
+                            <div className={classes['task-header']} key={`task-${index + 1}`}>
+                                <div className={`row`}>
+                                    <div className={`col-1`}>
+                                        <div className={isCompleted(task) ? classes['checkbox-selected'] : classes['checkbox']}>
+                                            <i onClick={() => updateTaskStatus(task)} className={'fa fa-check-circle-o'}></i>
                                         </div>
-                                    </Accordion.Toggle>
-                                    <Accordion.Collapse eventKey={`task-${index}`}>
-                                        <Card.Body className={classes['task-content']}>
-                                            <div className={classes['description']}>
-                                                <b>
-                                                    Created on {new Date(task['createdOn']).toUTCString()}
-                                                </b><br />
-                                                <span>
-                                                    {
-                                                        task.description
-                                                    }
-                                                </span>
-                                            </div>
-                                        </Card.Body>
-                                    </Accordion.Collapse>
-                                </div>)
-                        ) : (
-                                <span>No tasks</span>
-                            )
-                    }
-                </Accordion>
+                                    </div>
+                                    <div className={`col-9 text-left`}>
+                                        {
+                                            task['isEditable'] ? (
+                                                <div className={'input__text'}>
+                                                    <input value={task['name']} onChange={(e) => toggleEdit(task, 'name', e.target.value)} />
+                                                </div>
+                                            ) : (
+                                                    <span className={`${classes['task-name']} ${isCompleted(task) ? classes['striked'] : ''}`}>
+                                                        {
+                                                            task.name
+                                                        }
+                                                    </span>
+                                                )
+                                        }
+                                    </div>
+                                    <div className={`col-1`}>
+                                        <div className={classes['actions']}>
+                                            {
+                                                task['isEditable'] ? (
+                                                    <i className={'fa fa-check'} onClick={() => toggleEdit(task, 'isEditable', false)}  ></i>
+                                                ) : (
+                                                        <i className={'fa fa-pencil'} onClick={() => toggleEdit(task, 'isEditable', true)} ></i>
+                                                    )
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className={`col-1`}>
+                                        <div className={classes['actions']}>
+                                            <i className={'fa fa-trash'} onClick={() => deleteTask(task)}></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>)
+                    ) : (
+                            <span>No tasks</span>
+                        )
+                }
             </div>
         </React.Fragment >
     )

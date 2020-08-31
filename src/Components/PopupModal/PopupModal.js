@@ -2,16 +2,18 @@ import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 
 const PopupModal = ({
+    modalId = 'general-modal',
     header,
     content,
     toggle,
     customClass = 'modal-dialog'
 }) => {
     const [show, setshow] = useState(false)
+    const closeModal = () => setshow(false)
     return (
         <React.Fragment>
             <Modal size={'lg'} show={show} onHide={() => setshow(false)}>
-                <Modal.Header closeButton={true}>
+                <Modal.Header id={`popup-modal__${modalId}`} onClick={closeModal} closeButton={true}>
                     {
                         header
                     }

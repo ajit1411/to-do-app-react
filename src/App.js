@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import AppLayout from './Components/AppLayout';
 import Axios from 'axios'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 function App() {
   const [content, setcontent] = useState(<h3>Loading...</h3>)
   useEffect(() => {
@@ -26,6 +28,7 @@ function App() {
   }, [])
   return (
     <div className="App">
+      <ToastContainer />
       {
         content
       }
