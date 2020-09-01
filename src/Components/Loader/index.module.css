@@ -1,0 +1,18 @@
+.main-container{
+    width: 80vw;
+    height: 90vh;
+    /* border: 1px solid red; */
+    position: absolute;
+}
+
+.main-container .loader{
+    background-color: rgba(256, 256, 256, 0.5);
+    z-index: 1;
+}
+
+.main-container .loader i{
+    position: fixed;
+    top: 50%;
+    font-size: 4.0rem;
+    color: lightcoral;
+}

@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+
+.Login__main-container{
+  width: 25vw;
+  margin: 10% auto;
+  color:lightcoral;
+}
+
+.Login__main-container .header{
+  margin: 0% 0% 10% 0%;
+}
+
